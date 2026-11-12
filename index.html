@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#12805c">
+  <meta name="description" content="Discover jobs, surveys, freelance gigs and learning opportunities with Opportunity Hub.">
+  <title>Opportunity Hub — Find your next opportunity</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <style>
+    :root{--green:#12805c;--green2:#0c6548;--mint:#eaf7f1;--ink:#17332a;--muted:#63766e;--line:#e3ece7;--bg:#f7faf8;--white:#fff;--shadow:0 12px 35px rgba(17,67,48,.08)}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    button,input,select,textarea{font:inherit} button{cursor:pointer}
+    .topbar{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+    .nav{max-width:1120px;margin:auto;padding:13px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:-.4px}
+    .mark{width:38px;height:38px;border-radius:12px;background:var(--green);display:grid;place-items:center;color:white;font-size:20px;font-weight:900;box-shadow:0 5px 12px #12805c33}
+    .navlinks{display:flex;gap:8px;align-items:center}.navlinks button,.ghost{border:0;background:transparent;color:var(--muted);padding:9px 12px;border-radius:10px;font-weight:650}
+    .navlinks button.active,.navlinks button:hover,.ghost:hover{background:var(--mint);color:var(--green2)}
+    .primary{border:0;background:var(--green);color:#fff;padding:11px 16px;border-radius:11px;font-weight:750;box-shadow:0 5px 12px #12805c22}
+    .primary:hover{background:var(--green2)} .outline{border:1px solid var(--line);background:#fff;color:var(--ink);padding:10px 14px;border-radius:10px;font-weight:700}
+    main{max-width:1120px;margin:auto;padding:30px 20px 70px}
+    .hero{background:linear-gradient(120deg,#e9f7f0,#f7fcf9 68%,#fff);border:1px solid #dcefe5;border-radius:24px;padding:34px;display:grid;grid-template-columns:1.4fr .8fr;gap:22px;align-items:center;overflow:hidden}
+    .eyebrow{color:var(--green);font-weight:800;text-transform:uppercase;letter-spacing:1.4px;font-size:11px}
+    h1{font-size:clamp(30px,5vw,48px);line-height:1.08;letter-spacing:-1.7px;margin:10px 0 14px;max-width:620px}
+    .hero p{color:var(--muted);max-width:570px;margin:0 0 22px;font-size:16px}
+    .hero-art{justify-self:center;width:min(100%,260px);aspect-ratio:1;border-radius:34px;background:#fff;box-shadow:var(--shadow);display:grid;place-items:center;position:relative}
+    .hero-art .big{font-size:92px;color:var(--green)} .float{position:absolute;background:#fff;border:1px solid var(--line);padding:9px 12px;border-radius:12px;box-shadow:var(--shadow);font-size:12px;font-weight:750}.float.one{top:25px;left:-18px}.float.two{bottom:28px;right:-20px}
+    .searchrow{display:flex;gap:10px;margin:24px 0 20px}.searchbox{flex:1;display:flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:0 14px}.searchbox input{border:0;outline:0;width:100%;padding:13px 0;background:transparent}
+    .sectionhead{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:28px 0 14px}.sectionhead h2{font-size:22px;letter-spacing:-.5px;margin:0}.sectionhead p{margin:4px 0 0;color:var(--muted);font-size:13px}
+    .filters{display:flex;gap:8px;overflow:auto;padding-bottom:5px}.chip{white-space:nowrap;border:1px solid var(--line);background:#fff;color:var(--muted);padding:8px 13px;border-radius:999px;font-weight:650;font-size:13px}.chip.selected{background:var(--mint);border-color:#bfe3d0;color:var(--green2)}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card{background:#fff;border:1px solid var(--line);border-radius:17px;padding:17px;box-shadow:0 4px 16px rgba(17,67,48,.025);display:flex;flex-direction:column;min-height:220px}
+    .cardtop{display:flex;justify-content:space-between;gap:10px;align-items:start}.iconbox{width:42px;height:42px;border-radius:12px;background:var(--mint);display:grid;place-items:center;font-size:20px}.tag{font-size:11px;color:var(--green2);background:var(--mint);border-radius:99px;padding:5px 9px;font-weight:750}
+    .card h3{font-size:16px;line-height:1.3;margin:14px 0 5px}.company{font-size:12px;color:var(--muted)}.card p{font-size:13px;color:var(--muted);margin:10px 0 16px}.cardbottom{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:8px}.type{font-size:11px;color:var(--muted);font-weight:700}.textbtn{border:0;background:transparent;color:var(--green);font-weight:800;padding:6px}
+    .notice{background:#fff8e8;border:1px solid #f2dfb5;color:#76551a;padding:12px 14px;border-radius:12px;font-size:12px;margin-top:20px}
+    .empty{background:#fff;border:1px dashed #cddbd3;border-radius:16px;padding:30px;text-align:center;color:var(--muted);grid-column:1/-1}
+    .page{display:none}.page.active{display:block}
+    .panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;max-width:760px}.panel h2{margin-top:0}
+    label{display:block;font-size:13px;font-weight:750;margin:13px 0 6px}.field{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 12px;background:#fff;outline-color:#83c8a8}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}.hint{font-size:12px;color:var(--muted)}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}.stat{background:#fff;border:1px solid var(--line);padding:15px;border-radius:14px}.stat strong{display:block;font-size:24px}.stat span{color:var(--muted);font-size:12px}
+    .listingrow{padding:13px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;align-items:center}.listingrow:last-child{border:0}
+    footer{border-top:1px solid var(--line);padding:25px 20px;color:var(--muted);font-size:12px;text-align:center;background:#fff}
+    .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#17332a;color:#fff;padding:11px 16px;border-radius:12px;box-shadow:var(--shadow);display:none;z-index:10;font-size:13px}
+    @media(max-width:800px){.hero{grid-template-columns:1fr;padding:25px}.hero-art{display:none}.grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:560px){.nav{padding:10px 14px}.navlinks button{padding:8px;font-size:12px}.navlinks .hide-mobile{display:none}main{padding:20px 14px 50px}.hero{padding:23px 19px;border-radius:18px}.searchrow{flex-direction:column}.searchrow .primary{width:100%}.grid{grid-template-columns:1fr}.formgrid,.stats{grid-template-columns:1fr}.sectionhead{align-items:start;flex-direction:column}}
+  </style>
+</head>
+<body>
+<header class="topbar">
+  <nav class="nav">
+    <div class="brand"><div class="mark">O</div><span>Opportunity Hub</span></div>
+    <div class="navlinks">
+      <button class="active" data-page="home">Explore</button>
+      <button data-page="saved" class="hide-mobile">Saved</button>
+      <button data-page="submit">Submit listing</button>
+      <button data-page="admin" class="hide-mobile">Admin demo</button>
+    </div>
+  </nav>
+</header>
+<main>
+  <section id="home" class="page active">
+    <div class="hero">
+      <div>
+        <div class="eyebrow">Find your next opportunity</div>
+        <h1>Good opportunities should be easier to find.</h1>
+        <p>Explore job openings, freelance work, surveys and learning resources in one simple place.</p>
+        <button class="primary" onclick="document.getElementById('opportunities').scrollIntoView({behavior:'smooth'})">Explore opportunities&nbsp; →</button>
+      </div>
+      <div class="hero-art"><span class="big">↗</span><span class="float one">✦ New possibilities</span><span class="float two">✓ Your next step</span></div>
+    </div>
+    <div class="searchrow">
+      <div class="searchbox"><span>⌕</span><input id="search" placeholder="Search jobs, surveys, skills..." aria-label="Search opportunities"></div>
+      <button class="primary" id="searchBtn">Search</button>
+    </div>
+    <div class="sectionhead"><div><h2 id="opportunities">Explore opportunities</h2><p>Browse by category and check each listing before applying.</p></div><span class="hint" id="count"></span></div>
+    <div class="filters" id="filters">
+      <button class="chip selected" data-filter="All">All</button>
+      <button class="chip" data-filter="Jobs">Jobs</button>
+      <button class="chip" data-filter="Freelance">Freelance</button>
+      <button class="chip" data-filter="Surveys">Surveys</button>
+      <button class="chip" data-filter="Learning">Learning</button>
+      <button class="chip" data-filter="Affiliate">Affiliate</button>
+    </div>
+    <div class="grid" id="cards" style="margin-top:15px"></div>
+    <div class="notice"><strong>Safety first:</strong> Opportunity Hub does not guarantee income. Never pay a recruiter to get a job, share your password or OTP, or provide bank details to an unverified source. Listings marked “Demo” are examples and are not live vacancies.</div>
+  </section>
+  <section id="saved" class="page">
+    <div class="sectionhead"><div><h2>Saved opportunities</h2><p>Listings you save on this device.</p></div></div>
+    <div class="grid" id="savedCards"></div>
+  </section>
+  <section id="submit" class="page">
+    <div class="sectionhead"><div><h2>Submit an opportunity</h2><p>Suggest a listing for the Opportunity Hub team to review.</p></div></div>
+    <div class="panel">
+      <h2>Listing details</h2>
+      <p class="hint">This first version stores submissions only in this browser. It does not publish them publicly or send them to an administrator.</p>
+      <form id="submitForm">
+        <label for="title">Opportunity title *</label><input class="field" id="title" required maxlength="90" placeholder="e.g. Remote customer support role">
+        <div class="formgrid">
+          <div><label for="category">Category *</label><select class="field" id="category"><option>Jobs</option><option>Freelance</option><option>Surveys</option><option>Learning</option><option>Affiliate</option></select></div>
+          <div><label for="region">Who can apply?</label><select class="field" id="region"><option>Nigeria</option><option>Worldwide</option><option>Other / specify in description</option></select></div>
+        </div>
+        <label for="provider">Company / platform *</label><input class="field" id="provider" required maxlength="80" placeholder="Organisation or platform name">
+        <label for="url">Official application URL *</label><input class="field" id="url" type="url" required placeholder="https://...">
+        <label for="description">Description and eligibility *</label><textarea class="field" id="description" required rows="4" maxlength="600" placeholder="Explain what the opportunity involves, who is eligible and any costs (if any)."></textarea>
+        <p class="hint">Only submit opportunities you have checked. Do not include private information.</p>
+        <button class="primary" type="submit">Save submission for review</button>
+      </form>
+    </div>
+  </section>
+  <section id="admin" class="page">
+    <div class="sectionhead"><div><h2>Admin demo</h2><p>Local preview of listing management — not secured for public use.</p></div></div>
+    <div class="notice">This is a demonstration admin area. Anyone with access to this browser can view it. Do not use it to manage real users, payments or private data.</div>
+    <div class="stats"><div class="stat"><strong id="totalListings">0</strong><span>Listings on this device</span></div><div class="stat"><strong id="submittedCount">0</strong><span>Submitted for review</span></div><div class="stat"><strong id="savedCount">0</strong><span>Saved by this browser</span></div></div>
+    <div class="panel"><h2>Local submissions</h2><div id="submissions"></div></div>
+  </section>
+</main>
+<footer>© <span id="year"></span> Opportunity Hub · Discover. Learn. Grow.<br>Independent opportunity directory. Always verify providers before sharing information or applying.</footer>
+<div class="toast" id="toast" role="status"></div>
+<script>
+const demoListings = [
+ {id:"d1",title:"Remote customer support — sample listing",provider:"Demo listing · replace before launch",category:"Jobs",region:"Nigeria / Worldwide",description:"Example only. Add a verified employer, role details, eligibility and official application link before publishing.",url:"",badge:"Demo",icon:"💼"},
+ {id:"d2",title:"Freelance writing and virtual assistance",provider:"Example opportunity category",category:"Freelance",region:"Worldwide",description:"Explore legitimate freelance marketplaces and create a profile showcasing your services. This is a category example, not a paid job offer.",url:"",badge:"Demo",icon:"✍️"},
+ {id:"d3",title:"Online survey platforms",provider:"Research platforms · verify availability",category:"Surveys",region:"Country eligibility varies",description:"Survey availability and payout methods differ by country. Check Nigeria eligibility, minimum payout and terms on the official website.",url:"",badge:"Demo",icon:"📋"},
+ {id:"d4",title:"Free digital skills learning",provider:"Learning resource category",category:"Learning",region:"Worldwide",description:"Add trusted free courses in digital skills, customer service, design, spreadsheets and online work.",url:"",badge:"Demo",icon:"🎓"},
+ {id:"d5",title:"Affiliate partnership directory",provider:"Partner programme category",category:"Affiliate",region:"Country eligibility varies",description:"List only official affiliate programmes and explain commission rules, payment thresholds and country restrictions.",url:"",badge:"Demo",icon:"🔗"}
+];
+const read=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key))??fallback}catch{return fallback}};
+let listings=read("oh_listings",demoListings), saved=read("oh_saved",[]), submissions=read("oh_submissions",[]), filter="All";
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function persist(){localStorage.setItem("oh_listings",JSON.stringify(listings));localStorage.setItem("oh_saved",JSON.stringify(saved));localStorage.setItem("oh_submissions",JSON.stringify(submissions))}
+function toast(msg){$("toast").textContent=msg;$("toast").style.display="block";setTimeout(()=>$("toast").style.display="none",2600)}
+function card(item){let isSaved=saved.includes(item.id);return `<article class="card"><div class="cardtop"><div class="iconbox">${item.icon||"✦"}</div><span class="tag">${esc(item.badge||item.category)}</span></div><h3>${esc(item.title)}</h3><div class="company">${esc(item.provider)} · ${esc(item.region||"")}</div><p>${esc(item.description)}</p><div class="cardbottom"><span class="type">${esc(item.category)}</span><div><button class="textbtn" onclick="toggleSave('${item.id}')">${isSaved?"★ Saved":"☆ Save"}</button>${item.url?`<a class="textbtn" href="${esc(item.url)}" target="_blank" rel="noopener noreferrer">View ↗</a>`:""}</div></div></article>`}
+function renderCards(){let q=$("search").value.trim().toLowerCase();let arr=listings.filter(x=>(filter==="All"||x.category===filter)&&(!q||[x.title,x.provider,x.description,x.category,x.region].join(" ").toLowerCase().includes(q)));$("cards").innerHTML=arr.length?arr.map(card).join(""):'<div class="empty">No matches yet. Try another search or category.</div>';$("count").textContent=arr.length+" shown"}
+function renderSaved(){let arr=listings.filter(x=>saved.includes(x.id));$("savedCards").innerHTML=arr.length?arr.map(card).join(""):'<div class="empty">You have not saved any opportunities yet.</div>'}
+function toggleSave(id){saved=saved.includes(id)?saved.filter(x=>x!==id):[...saved,id];persist();renderCards();renderSaved();renderAdmin();toast(saved.includes(id)?"Saved on this device":"Removed from saved")}
+function renderAdmin(){$("totalListings").textContent=listings.length;$("submittedCount").textContent=submissions.length;$("savedCount").textContent=saved.length;$("submissions").innerHTML=submissions.length?submissions.map((s,i)=>`<div class="listingrow"><div><strong>${esc(s.title)}</strong><div class="hint">${esc(s.provider)} · ${esc(s.category)}</div></div><button class="outline" onclick="approveDemo(${i})">Add to directory</button></div>`).join(""):'<p class="hint">No submissions on this device yet.</p>'}
+function approveDemo(i){let s=submissions[i];listings.unshift({...s,id:"u"+Date.now(),badge:"Review needed",icon:"✦"});submissions.splice(i,1);persist();renderAll();toast("Added locally. Verify before public launch.")}
+function renderAll(){renderCards();renderSaved();renderAdmin()}
+document.querySelectorAll("[data-page]").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));$(b.dataset.page).classList.add("active");document.querySelectorAll("[data-page]").forEach(x=>x.classList.toggle("active",x===b));if(b.dataset.page==="saved")renderSaved();if(b.dataset.page==="admin")renderAdmin();window.scrollTo({top:0,behavior:"smooth"})}));
+$("filters").addEventListener("click",e=>{let b=e.target.closest("[data-filter]");if(!b)return;filter=b.dataset.filter;document.querySelectorAll("[data-filter]").forEach(x=>x.classList.toggle("selected",x===b));renderCards()});
+$("search").addEventListener("input",renderCards);$("searchBtn").addEventListener("click",renderCards);
+$("submitForm").addEventListener("submit",e=>{e.preventDefault();let url=$("url").value.trim();if(!/^https?:\/\//i.test(url)){toast("Please enter a valid https:// or http:// link");return}submissions.unshift({title:$("title").value.trim(),category:$("category").value,region:$("region").value,provider:$("provider").value.trim(),url,description:$("description").value.trim(),badge:"Submitted",icon:"✦"});persist();e.target.reset();renderAdmin();toast("Submission saved on this device for review.");document.querySelector('[data-page="admin"]').click()});
+$("year").textContent=new Date().getFullYear();renderAll();
+if("serviceWorker" in navigator && location.protocol.startsWith("http"))navigator.serviceWorker.register("./service-worker.js").catch(()=>{});
+</script>
+</body>
+</html>
