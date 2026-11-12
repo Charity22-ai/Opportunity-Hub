@@ -1,0 +1,10 @@
+{
+  "name": "Opportunity Hub",
+  "short_name": "Opportunity Hub",
+  "description": "Discover jobs, surveys, freelance work and learning resources.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f7faf8",
+  "theme_color": "#12805c",
+  "icons": []
+}
