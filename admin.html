@@ -1,0 +1,189 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Opportunity Hub Admin</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f5fb;color:#20233a}
+header{background:#321078;color:white;padding:20px;font-size:22px;font-weight:bold}
+main{max-width:950px;margin:25px auto;padding:15px}
+.card{background:white;padding:20px;border-radius:14px;margin-bottom:18px;box-shadow:0 2px 12px #0001}
+input,textarea,select{width:100%;padding:13px;margin:8px 0;border:1px solid #ddd;border-radius:8px;font-size:15px}
+button{padding:12px 18px;border:0;border-radius:8px;background:#5423a8;color:white;font-weight:bold;margin:5px;cursor:pointer}
+button.secondary{background:#555}
+button.danger{background:#c0392b}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.stat{background:#f0eaff;padding:18px;border-radius:10px}
+.stat strong{font-size:27px;display:block}
+.item{border-bottom:1px solid #eee;padding:14px 0}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<header>🚀 Opportunity Hub Admin</header>
+<main>
+<section id="login" class="card">
+<h2>Administrator Login</h2>
+<input id="email" type="email" placeholder="Admin email">
+<input id="password" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+<p id="message"></p>
+</section>
+
+<section id="dashboard" class="hidden">
+<div class="card">
+<h2>Welcome, Admin!</h2>
+<div class="stats">
+<div class="stat"><strong id="total">0</strong>Listings</div>
+<div class="stat"><strong id="pending">0</strong>Pending</div>
+<div class="stat"><strong id="published">0</strong>Published</div>
+</div>
+<button class="secondary" onclick="logout()">Logout</button>
+</div>
+
+<div class="card">
+<h2>Add Opportunity</h2>
+<input id="title" placeholder="Opportunity title">
+<input id="company" placeholder="Company">
+<select id="category">
+<option value="Jobs">Jobs</option>
+<option value="Freelance">Freelance</option>
+<option value="Surveys">Surveys</option>
+<option value="Learning">Learning</option>
+<option value="Affiliate">Affiliate</option>
+</select>
+<input id="location" placeholder="Location">
+<input id="url" placeholder="Application URL">
+<textarea id="description" placeholder="Description"></textarea>
+<button onclick="addOpportunity()">Publish Opportunity</button>
+<p id="addMessage"></p>
+</div>
+
+<div class="card">
+<h2>Manage Opportunities</h2>
+<div id="listings">Loading...</div>
+</div>
+
+<div class="card">
+<h2>Visitor Submissions</h2>
+<div id="submissions">Loading...</div>
+</div>
+</section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "YOUR_PROJECT_URL";
+const SUPABASE_KEY = "YOUR_PUBLISHABLE_KEY";
+
+const db = supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+let opportunities = [];
+
+async function login(){
+ const {error}=await db.auth.signInWithPassword({
+  email:document.getElementById("email").value,
+  password:document.getElementById("password").value
+ });
+ if(error){document.getElementById("message").textContent=error.message;return;}
+ await checkAdmin();
+}
+
+async function checkAdmin(){
+ const {data:{user}}=await db.auth.getUser();
+ if(!user)return;
+ const {data,error}=await db.from("admin_users").select("user_id").eq("user_id",user.id).maybeSingle();
+ if(error||!data){
+  await db.auth.signOut();
+  document.getElementById("message").textContent="This account is not an administrator.";
+  return;
+ }
+ document.getElementById("login").classList.add("hidden");
+ document.getElementById("dashboard").classList.remove("hidden");
+ loadData();
+}
+
+async function loadData(){
+ const {data,error}=await db.from("opportunities").select("*").order("created_at",{ascending:false});
+ if(error){alert(error.message);return;}
+ opportunities=data||[];
+ document.getElementById("total").textContent=opportunities.length;
+ document.getElementById("pending").textContent=opportunities.filter(x=>x.status==="pending").length;
+ document.getElementById("published").textContent=opportunities.filter(x=>x.status==="published").length;
+ document.getElementById("listings").innerHTML=opportunities.map(x=>`
+ <div class="item">
+ <b>${escapeText(x.title)}</b> — ${escapeText(x.status)}
+ <p>${escapeText(x.company||"")}</p>
+ <button onclick="changeStatus('${x.id}','published')">Publish</button>
+ <button class="secondary" onclick="changeStatus('${x.id}','expired')">Expire</button>
+ <button class="danger" onclick="removeItem('${x.id}')">Delete</button>
+ </div>`).join("")||"No listings yet.";
+ loadSubmissions();
+}
+
+function escapeText(value){
+ return String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+async function addOpportunity(){
+ const title=document.getElementById("title").value.trim();
+ if(!title){alert("Enter an opportunity title.");return;}
+ const {error}=await db.from("opportunities").insert({
+  title,
+  company:document.getElementById("company").value,
+  category:document.getElementById("category").value,
+  location:document.getElementById("location").value,
+  application_url:document.getElementById("url").value,
+  description:document.getElementById("description").value,
+  status:"published"
+ });
+ if(error){alert(error.message);return;}
+ document.getElementById("addMessage").textContent="Opportunity published!";
+ ["title","company","location","url","description"].forEach(id=>document.getElementById(id).value="");
+ loadData();
+}
+
+async function changeStatus(id,status){
+ const {error}=await db.from("opportunities").update({status}).eq("id",id);
+ if(error){alert(error.message);return;}
+ loadData();
+}
+
+async function removeItem(id){
+ if(!confirm("Delete this opportunity?"))return;
+ const {error}=await db.from("opportunities").delete().eq("id",id);
+ if(error){alert(error.message);return;}
+ loadData();
+}
+
+async function loadSubmissions(){
+ const {data,error}=await db.from("submissions").select("*").order("created_at",{ascending:false});
+ if(error){document.getElementById("submissions").textContent=error.message;return;}
+ document.getElementById("submissions").innerHTML=(data||[]).map(x=>`
+ <div class="item"><b>${escapeText(x.title)}</b> — ${escapeText(x.status)}
+ <button onclick="review('${x.id}','approved')">Approve</button>
+ <button class="danger" onclick="review('${x.id}','rejected')">Reject</button>
+ </div>`).join("")||"No submissions yet.";
+}
+
+async function review(id,status){
+ const {error}=await db.from("submissions").update({status}).eq("id",id);
+ if(error){alert(error.message);return;}
+ loadSubmissions();
+}
+
+async function logout(){
+ await db.auth.signOut();
+ location.reload();
+}
+
+(async()=>{
+ const {data:{session}}=await db.auth.getSession();
+ if(session)await checkAdmin();
+})();
+</script>
+</body>
+</html>
